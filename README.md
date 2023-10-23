@@ -48,7 +48,7 @@ pbf.stringify(pbf.not(pbf.eq("is_repost", false))) // is_repost = false
 ```
 
 ### Conditional filter generation
-In some instances you want to create a search filter with some of the filters conditionally enabled through [short-circuiting]([https://](https://www.educative.io/answers/what-are-javascript-short-circuiting-operators)). You can do this by adding the `.maybe` method before calling the operators. This will filter out any falsey values and output the appropriate filters.
+In some instances you want to create a search filter with some of the filters conditionally enabled through [short-circuiting]([https://](https://www.educative.io/answers/what-are-javascript-short-circuiting-operators)). You can do this by adding the `.maybe` modifier before calling the operators. This will filter out any falsey values and output the appropriate filters.
 
 ```typescript
 import * as pbf from "@nedpals/pbf";
@@ -63,7 +63,7 @@ pbf.stringify(pbf.and.maybe(
 ```
 
 ### Comparing multiple values
-Instead of repeating yourself writing multiple comparison filters of the same field, PBF provides an easy shortcut through the `either` method.
+Instead of repeating yourself writing multiple comparison filters of the same field, PBF provides an easy shortcut through the `either` modifier.
 
 ```typescript
 import * as pbf from "@nedpals/pbf";
@@ -75,7 +75,7 @@ pbf.stringify(pbf.eq.either("size", ["L", "XL", "XXL"])); // (size = "L" || size
 ### Deserialize / parse raw filter strings
 PBF also supports parsing raw filter strings into a proper PBF format. This is great when you want to parse from the URL search query or just want to build a PocketBase-like search experience:
 ```typescript
-import * as parse from "pbf";
+import * as pbf from "@nedpals/pbf";
 
 const result = pbf.parse("title = 'example'"); // equivalent to eq("title", "example");
 
