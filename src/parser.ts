@@ -6,7 +6,7 @@ import { COMPARISON_OPS, ComparisonOp, LOGICAL_OPS, LogicalOp } from "./ops";
 const ESCAPED_LOGICAL_FILTER_SYM = Object.values(LOGICAL_OPS).map((v) => v.replace('||', '\\|\\|'));
 
 // Comparison filter
-const RAW_FIELD_REGEX = '@?[a-zA-Z0-9_\\.]+';
+const RAW_FIELD_REGEX = '@?[a-zA-Z0-9_\\.]+(?:\:[a-z_]+)?';
 const ESCAPED_COMPARISON_FILTER_SYM = Object.values(COMPARISON_OPS)
     .sort((a, b) => a.length < b.length ? 1 : a.length === b.length ? 0 : -1)
     .map((v) => v.replace('?', '\\?'));
@@ -43,7 +43,7 @@ const TOKEN_KINDS = {
     9: 'string',
 } as const;
 
-const newLexer = () => new RegExp(`${TOKENS.map(tk => `(${tk})`).join('|')}`, "g");
+const newLexer = () => new RegExp(TOKENS.map(tk => `(${tk})`).join('|'), "g");
 
 interface Token {
     value: string

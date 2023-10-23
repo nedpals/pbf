@@ -79,6 +79,10 @@ test('stringify a comparison filter with Date', () => {
     expect(pbf.stringify(pbf.eq('created', new Date('2020/01/01')))).toBe('created = "2019-12-31 16:00:00.000Z"');
 });
 
+test('stringify a comparison filter with modifier', () => {
+    expect(pbf.stringify(pbf.like('@request.data.role:isset', false))).toBe('@request.data.role:isset ~ false');
+});
+
 test('stringify an and logical filter', () => {
     expect(pbf.stringify(pbf.and(pbf.any('a', 1), pbf.lt('b', 2)))).toBe('a ?= 1 && b < 2');
 });

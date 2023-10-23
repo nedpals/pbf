@@ -85,6 +85,11 @@ test("parse a comparison filter with placeholder value", () => {
     expect(pbf.parse("title ~ {:title}", { title: "example" })).toStrictEqual(pbf.like("title", "example"));
 });
 
+test("parse a comparison filter with modifier", () => {
+    expect(pbf.parse("@request.data.role:isset = false"))
+        .toStrictEqual(pbf.eq("@request.data.role:isset", false));
+});
+
 test("parse a logical filter (and)", () => {
     expect(pbf.parse("a = '1' && b >= 2")).toStrictEqual(pbf.and(pbf.eq("a", '1'), pbf.gte("b", 2)));
 });
