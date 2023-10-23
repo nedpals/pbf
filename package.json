@@ -1,6 +1,6 @@
 {
   "name": "@nedpals/pbf",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Library for serializing and deserializing Pocketbase filter syntax",
   "files": ["dist/*"],
   "main": "dist/index.js",
