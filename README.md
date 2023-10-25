@@ -90,12 +90,14 @@ To make serializing/deserializing possible, PBF stores it as an object following
 // Taken and modified from the source code for brevity
 type FilterValue = number | boolean | string | Date | null;
 type Filter = ComparisonFilter | LogicalFilter | ContainerFilter;
+type Metadata = Record<string, any>
 
 // eg. a = 1
 interface ComparisonFilter {
     field: string
     op: Operator
     value: FilterValue
+    meta?: Metadata
 }
 
 // eg. a > 1 && b = 2
@@ -103,12 +105,14 @@ interface LogicalFilter {
     lhs: Filter
     op: Operator
     rhs: Filter
+    meta?: Metadata
 }
 
 // eg. (c = 3)
 interface ContainerFilter {
     op: Operator
     filter: Filter
+    meta?: Metadata
 }
 ```
 
