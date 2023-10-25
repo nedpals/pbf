@@ -140,3 +140,15 @@ test("parse a nested logical filter (both parenthesized)", () => {
 test("parse a parenthesized container filter", () => {
     expect(pbf.parse("(a = 1)")).toStrictEqual(pbf.par(pbf.eq("a", 1)));
 });
+
+test("throw an error when parsing a comparison filter with dot", () => {
+    expect(() => pbf.parse(". = 1")).toThrowError();
+    expect(() => pbf.parse(".abc = 1")).toThrowError();
+    expect(() => pbf.parse(". = .")).toThrowError();
+    expect(() => pbf.parse("abc = .def")).toThrowError();
+});
+
+test("throw an error when parsing a comparison filter with @ only", () => {
+    expect(() => pbf.parse("@ = 1")).toThrowError();
+    expect(() => pbf.parse("abc = @")).toThrowError();
+});

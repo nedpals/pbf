@@ -6,7 +6,7 @@ import { COMPARISON_OPS, ComparisonOp, LOGICAL_OPS, LogicalOp } from "./ops";
 const ESCAPED_LOGICAL_FILTER_SYM = Object.values(LOGICAL_OPS).map((v) => v.replace('||', '\\|\\|'));
 
 // Comparison filter
-const RAW_FIELD_REGEX = '@?[a-zA-Z0-9_\\.]+(?:\:[a-z_]+)?';
+const RAW_FIELD_REGEX = '@?\\w+(?:\\.\\w+)*(?:\:[a-z_]+)?';
 const ESCAPED_COMPARISON_FILTER_SYM = Object.values(COMPARISON_OPS)
     .sort((a, b) => a.length < b.length ? 1 : a.length === b.length ? 0 : -1)
     .map((v) => v.replace('?', '\\?'));
@@ -68,7 +68,7 @@ function createParser(input: string, params: Record<string, FilterValue>): Parse
     return {
         input,
         lexer: newLexer(),
-        index: -1,
+        index: 0,
         prevToken: null,
         currentToken: null,
         nextToken: null,
@@ -106,18 +106,27 @@ function createParser(input: string, params: Record<string, FilterValue>): Parse
                         continue;
                     }
 
+                    // Checks if there is any skipped characters from the last position.
+                    // If present, return a null token.
+                    const pos = this.input.indexOf(tokens[i], this.index);
+                    if (pos > this.index && pos - this.index >= 1) {
+                        const gap = this.input.substring(this.index, pos);
+                        if (gap.indexOf(" ") === -1 || (gap.indexOf(" ") !== -1 && !gap.endsWith(" "))) {
+                            this.nextToken = null;
+                            break;
+                        }
+                    }
+
                     this.nextToken = {
                         kind: TOKEN_KINDS[i as keyof typeof TOKEN_KINDS],
                         value: tokens[i]
                     }
 
-                    if (tokens.index === this.lexer.lastIndex) {
-                        this.lexer.lastIndex++;
-                    }
-
+                    this.index = pos + tokens[i].length;
                     break;
                 }
             } else {
+                this.index++;
                 this.nextToken = null;
             }
             return this.currentToken;
@@ -186,7 +195,7 @@ function parseLogicalFilter(p: Parser, lhs: Filter): Filter {
     return parseLogicalIfPresent(p, filter);
 }
 
-// TODO: if there is a 3-or-more filters, it should be left-prec'd instead of the right to match stringify behavior
+// TODO: if there are 3-or-more filters, it should be left-prec'd instead of the right to match stringify behavior
 function parseLogicalIfPresent(p: Parser, filter: Filter): Filter {
     if (p.currentToken && p.currentToken.kind === 'logical_op') {
         return parseLogicalFilter(p, 'lhs' in filter ? par(filter) : filter);
