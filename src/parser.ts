@@ -98,14 +98,14 @@ function createParser(input: string, params: Record<string, FilterValue>): Parse
 
         next() {
             const tokens = this.lexer.exec(input);
+            this.prevToken = this.currentToken;
+            this.currentToken = this.nextToken;
             if (tokens) {
                 for (let i = 1; i < tokens.length; i++) {
                     if (!tokens[i]) {
                         continue;
                     }
 
-                    this.prevToken = this.currentToken;
-                    this.currentToken = this.nextToken;
                     this.nextToken = {
                         kind: TOKEN_KINDS[i as keyof typeof TOKEN_KINDS],
                         value: tokens[i]
@@ -118,8 +118,6 @@ function createParser(input: string, params: Record<string, FilterValue>): Parse
                     break;
                 }
             } else {
-                this.prevToken = this.currentToken;
-                this.currentToken = this.nextToken;
                 this.nextToken = null;
             }
             return this.currentToken;
