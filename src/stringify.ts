@@ -1,6 +1,9 @@
 import { par } from "./builder";
 import { Filter, MaybeFilter } from "./filter";
 import { COMPARISON_OPS, LOGICAL_OPS } from "./ops";
+import { RAW_FIELD_REGEX } from "./parser";
+
+const fieldRegex = new RegExp("^" + RAW_FIELD_REGEX + "$");
 
 export function wrapValue(value: unknown): string | null {
     if (value === null) {
@@ -21,6 +24,9 @@ export function stringifyFilter(filter: MaybeFilter<Filter>): string {
         return `(${wrappedFilter})`;
     } else if ('field' in filter) {
         const value = wrapValue(filter.value);
+        if (!fieldRegex.test(filter.field)) {
+            throw new Error(`Invalid field: ${filter.field}`);
+        }
         return `${filter.field} ${COMPARISON_OPS[filter.op]} ${value}`;
     }
 

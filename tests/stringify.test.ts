@@ -135,3 +135,11 @@ test('stringify an empty maybe-variant logical operator', () => {
         0,
     ))).toBe('');
 });
+
+test('throw an error when stringify-ing comparison fields with invalid fields', () => {
+    expect(() => pbf.stringify(pbf.eq(".", 1))).toThrowError();
+    expect(() => pbf.stringify(pbf.lt("@", "."))).toThrowError();
+    expect(() => pbf.stringify(pbf.and(pbf.eq("a", 1), pbf.gte("hello world", "a")))).toThrowError();
+    expect(() => pbf.stringify(pbf.like(" ", "aaaa"))).toThrowError();
+    expect(() => pbf.stringify(pbf.not(pbf.eq("", "")))).toThrowError();
+})

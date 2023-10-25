@@ -217,3 +217,5 @@ export function parseFilter(filterStr: string, params: Record<string, FilterValu
     parser.consume();
     return parseFilterCtx(parser);
 }
+
+export { RAW_FIELD_REGEX };
