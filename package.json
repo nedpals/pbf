@@ -8,6 +8,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "test": "vitest",
+    "prepublishOnly": "npm run build",
     "build": "node build.js"
   },
   "repository": {
