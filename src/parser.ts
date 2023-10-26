@@ -100,35 +100,31 @@ function createParser(input: string, params: Record<string, FilterValue>): Parse
             const tokens = this.lexer.exec(input);
             this.prevToken = this.currentToken;
             this.currentToken = this.nextToken;
-            if (tokens) {
-                for (let i = 1; i < tokens.length; i++) {
-                    if (!tokens[i]) {
-                        continue;
-                    }
 
-                    // Checks if there is any skipped characters from the last position.
-                    // If present, return a null token.
-                    const pos = this.input.indexOf(tokens[i], this.index);
-                    if (pos > this.index && pos - this.index >= 1) {
-                        const gap = this.input.substring(this.index, pos);
-                        if (gap.indexOf(" ") === -1 || (gap.indexOf(" ") !== -1 && !gap.endsWith(" "))) {
-                            this.nextToken = null;
-                            break;
-                        }
-                    }
-
-                    this.nextToken = {
-                        kind: TOKEN_KINDS[i as keyof typeof TOKEN_KINDS],
-                        value: tokens[i]
-                    }
-
-                    this.index = pos + tokens[i].length;
-                    break;
-                }
-            } else {
+            const i = tokens?.findIndex((v, idx) => idx > 0 && v) ?? -1;
+            if (!tokens || i === -1 || !tokens[i]) {
                 this.index++;
                 this.nextToken = null;
+                return this.currentToken;
             }
+
+            // Checks if there are any skipped characters starting
+            // from the last position. If present, return a null token.
+            const pos = this.input.indexOf(tokens[i], this.index);
+            if (pos > this.index && pos - this.index >= 1) {
+                const gap = this.input.substring(this.index, pos);
+                if (gap.indexOf(" ") === -1 || (gap.indexOf(" ") !== -1 && !gap.endsWith(" "))) {
+                    this.nextToken = null;
+                    return this.currentToken;
+                }
+            }
+
+            this.nextToken = {
+                kind: TOKEN_KINDS[i as keyof typeof TOKEN_KINDS] ?? "unknown",
+                value: tokens[i]
+            }
+
+            this.index = pos + tokens[i].length;
             return this.currentToken;
         },
     }
