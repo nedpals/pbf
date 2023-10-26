@@ -11,7 +11,7 @@ const ESCAPED_COMPARISON_FILTER_SYM = Object.values(COMPARISON_OPS)
     .sort((a, b) => a.length < b.length ? 1 : a.length === b.length ? 0 : -1)
     .map((v) => v.replace('?', '\\?'));
 
-const RAW_STRING_VALUE_REGEX = `".+"|'.+'`;
+const RAW_STRING_VALUE_REGEX = `""|''|".+"|'.+'`;
 const RAW_NUMBER_VALUE_REGEX = '[+-]?[0-9]*[.]?[0-9]+';
 const RAW_BOOLEAN_VALUE_REGEX = 'true|false';
 const RAW_NULL_VALUE_REGEX = 'null';

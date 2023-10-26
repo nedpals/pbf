@@ -141,6 +141,18 @@ test("parse a parenthesized container filter", () => {
     expect(pbf.parse("(a = 1)")).toStrictEqual(pbf.par(pbf.eq("a", 1)));
 });
 
+test("parse a complex filter with empty strings", () => {
+    expect(pbf.parse('(a ~ "" || b ~ "") || c ~ ""')).toStrictEqual(
+        pbf.or(
+            pbf.par(pbf.or(
+                pbf.like("a", ""),
+                pbf.like("b", "")
+            )),
+            pbf.like("c", "")
+        )
+    );
+});
+
 test("throw an error when parsing a comparison filter with dot", () => {
     expect(() => pbf.parse(". = 1")).toThrowError();
     expect(() => pbf.parse(".abc = 1")).toThrowError();
