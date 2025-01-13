@@ -11,13 +11,13 @@ Library for serializing and deserializing [PocketBase](https://pocketbase.io) fi
 ## Installation
 You can easily install PBF using npm or yarn:
 ```bash
-npm install pbf
+npm install @nedpals/pbf
 ```
 
 or
 
 ```bash
-yarn add pbf
+yarn add @nedpals/pbf
 ```
 
 ## Usage
